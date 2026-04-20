@@ -3,12 +3,11 @@ package com.amro.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
+import com.amro.app.navigation.AmroNavHost
 import com.amro.core.designsystem.theme.AmroTheme
 
 class MainActivity : ComponentActivity() {
@@ -16,10 +15,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AmroTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
-                    Box(modifier = Modifier.padding(padding)) {
-                        Text(text = "AMRO")
-                    }
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    AmroNavHost(navController = rememberNavController())
                 }
             }
         }

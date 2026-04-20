@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.amro.android.application)
     alias(libs.plugins.amro.android.compose)
     alias(libs.plugins.amro.koin)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 val localProps = Properties().apply {
@@ -47,6 +48,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit4)
     androidTestImplementation(libs.compose.ui.test.junit4)
