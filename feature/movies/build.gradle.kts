@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.amro.android.library)
     alias(libs.plugins.amro.android.compose)
     alias(libs.plugins.amro.koin)
+    alias(libs.plugins.paparazzi)
 }
 
 android {
@@ -29,4 +30,8 @@ dependencies {
     testImplementation(libs.turbine)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.lifecycle.runtime.ktx)
+
+    androidTestImplementation(libs.junit4)
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    debugImplementation(libs.compose.ui.test.manifest)
 }

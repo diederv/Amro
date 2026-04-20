@@ -87,7 +87,7 @@ fun TrendingMoviesScreen(
 }
 
 @Composable
-private fun MovieListContent(
+internal fun MovieListContent(
     state: TrendingMoviesUiState.Content,
     onMovieClick: (Int) -> Unit,
     onGenreFilter: (Int?) -> Unit,
@@ -128,14 +128,14 @@ private fun MovieListContent(
 }
 
 @Composable
-private fun LoadingContent(modifier: Modifier = Modifier) {
+internal fun LoadingContent(modifier: Modifier = Modifier) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         CircularProgressIndicator()
     }
 }
 
 @Composable
-private fun EmptyContent(modifier: Modifier = Modifier) {
+internal fun EmptyContent(modifier: Modifier = Modifier) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Text(
             text = "No movies match your filter.\nTry a different genre.",
@@ -146,7 +146,7 @@ private fun EmptyContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun ErrorContent(
+internal fun ErrorContent(
     message: String,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,

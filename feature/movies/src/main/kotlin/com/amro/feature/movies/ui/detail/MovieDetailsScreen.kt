@@ -107,7 +107,7 @@ fun MovieDetailsScreen(
 }
 
 @Composable
-private fun DetailContent(
+internal fun DetailContent(
     movieDetails: MovieDetails,
     modifier: Modifier = Modifier,
 ) {
