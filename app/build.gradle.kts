@@ -1,7 +1,13 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.amro.android.application)
     alias(libs.plugins.amro.android.compose)
     alias(libs.plugins.amro.koin)
+}
+
+val localProps = Properties().apply {
+    rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
 }
 
 android {
@@ -11,6 +17,16 @@ android {
         applicationId = "com.amro.app"
         versionCode = 1
         versionName = "0.1.0"
+
+        buildConfigField(
+            "String",
+            "TMDB_API_KEY",
+            "\"${localProps.getProperty("TMDB_API_KEY", "")}\""
+        )
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
