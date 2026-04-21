@@ -23,8 +23,10 @@ class TrendingMoviesScreenTest {
 
     private val genres = listOf(Genre(28, "Action"), Genre(35, "Comedy"))
     private val movies = listOf(
+        // The first movie becomes the featured hero; the rest populate the grid.
         testMovie(id = 1, title = "Inception", genreIds = listOf(28), voteAverage = 8.3),
         testMovie(id = 2, title = "The Mask", genreIds = listOf(35), voteAverage = 6.5),
+        testMovie(id = 3, title = "Tenet", genreIds = listOf(28), voteAverage = 7.3),
     )
 
     private fun contentState(selectedGenreId: Int? = null) = TrendingMoviesUiState.Content(
@@ -38,7 +40,7 @@ class TrendingMoviesScreenTest {
     @Test
     fun contentStateShowsMovieTitles() {
         composeTestRule.setContent {
-            AmroTheme {
+            AmroTheme(darkTheme = true) {
                 MovieListContent(
                     state = contentState(),
                     onMovieClick = {},
@@ -49,14 +51,16 @@ class TrendingMoviesScreenTest {
             }
         }
 
-        composeTestRule.onNodeWithText("Inception").assertIsDisplayed()
-        composeTestRule.onNodeWithText("The Mask").assertIsDisplayed()
+        // Hero renders the featured movie title in uppercase; grid items likewise.
+        composeTestRule.onNodeWithText("INCEPTION").assertIsDisplayed()
+        composeTestRule.onNodeWithText("THE MASK").assertIsDisplayed()
+        composeTestRule.onNodeWithText("TENET").assertIsDisplayed()
     }
 
     @Test
     fun contentStateShowsGenreFilterChips() {
         composeTestRule.setContent {
-            AmroTheme {
+            AmroTheme(darkTheme = true) {
                 MovieListContent(
                     state = contentState(),
                     onMovieClick = {},
@@ -67,9 +71,9 @@ class TrendingMoviesScreenTest {
             }
         }
 
-        composeTestRule.onNodeWithText("All").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Action").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Comedy").assertIsDisplayed()
+        composeTestRule.onNodeWithText("FOR YOU").assertIsDisplayed()
+        composeTestRule.onNodeWithText("ACTION").assertIsDisplayed()
+        composeTestRule.onNodeWithText("COMEDY").assertIsDisplayed()
     }
 
     @Test
@@ -77,7 +81,7 @@ class TrendingMoviesScreenTest {
         var selectedId: Int? = -1
 
         composeTestRule.setContent {
-            AmroTheme {
+            AmroTheme(darkTheme = true) {
                 MovieListContent(
                     state = contentState(),
                     onMovieClick = {},
@@ -88,16 +92,16 @@ class TrendingMoviesScreenTest {
             }
         }
 
-        composeTestRule.onNodeWithText("Action").performClick()
+        composeTestRule.onNodeWithText("ACTION").performClick()
         assertEquals(28, selectedId)
     }
 
     @Test
-    fun clickingAllChipClearsFilter() {
+    fun clickingForYouChipClearsFilter() {
         var selectedId: Int? = 28
 
         composeTestRule.setContent {
-            AmroTheme {
+            AmroTheme(darkTheme = true) {
                 MovieListContent(
                     state = contentState(selectedGenreId = 28),
                     onMovieClick = {},
@@ -108,7 +112,7 @@ class TrendingMoviesScreenTest {
             }
         }
 
-        composeTestRule.onNodeWithText("All").performClick()
+        composeTestRule.onNodeWithText("FOR YOU").performClick()
         assertEquals(null, selectedId)
     }
 
@@ -117,23 +121,23 @@ class TrendingMoviesScreenTest {
         var retryClicked = false
 
         composeTestRule.setContent {
-            AmroTheme {
+            AmroTheme(darkTheme = true) {
                 ErrorContent(message = "Network error", onRetry = { retryClicked = true })
             }
         }
 
-        composeTestRule.onNodeWithText("Something went wrong").assertIsDisplayed()
+        composeTestRule.onNodeWithText("SIGNAL LOST").assertIsDisplayed()
         composeTestRule.onNodeWithText("Network error").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Retry").assertIsDisplayed()
+        composeTestRule.onNodeWithText("RETRY").assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("Retry").performClick()
+        composeTestRule.onNodeWithText("RETRY").performClick()
         assertEquals(true, retryClicked)
     }
 
     @Test
     fun emptyStateShowsMessage() {
         composeTestRule.setContent {
-            AmroTheme { EmptyContent() }
+            AmroTheme(darkTheme = true) { EmptyContent() }
         }
 
         composeTestRule.onNodeWithText("No movies match your filter.", substring = true).assertIsDisplayed()

@@ -7,3 +7,6 @@ data object MoviesListRoute
 
 @Serializable
 data class MovieDetailsRoute(val movieId: Int)
+
+@Serializable
+data object SettingsRoute

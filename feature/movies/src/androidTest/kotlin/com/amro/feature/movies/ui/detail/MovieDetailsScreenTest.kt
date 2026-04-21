@@ -20,70 +20,69 @@ class MovieDetailsScreenTest {
     @Test
     fun contentRendersTitle() {
         composeTestRule.setContent {
-            AmroTheme {
+            AmroTheme(darkTheme = true) {
                 DetailContent(movieDetails = testMovieDetails(movieId = 1))
             }
         }
 
-        composeTestRule.onNodeWithText("Test Movie 1").assertIsDisplayed()
+        composeTestRule.onNodeWithText("TEST MOVIE 1").assertIsDisplayed()
     }
 
     @Test
     fun contentRendersTagline() {
         composeTestRule.setContent {
-            AmroTheme { DetailContent(movieDetails = testMovieDetails()) }
+            AmroTheme(darkTheme = true) { DetailContent(movieDetails = testMovieDetails()) }
         }
 
-        composeTestRule.onNodeWithText("A tagline").assertIsDisplayed()
+        composeTestRule.onNodeWithText("A TAGLINE").assertIsDisplayed()
     }
 
     @Test
     fun contentRendersGenreChip() {
         composeTestRule.setContent {
-            AmroTheme { DetailContent(movieDetails = testMovieDetails()) }
+            AmroTheme(darkTheme = true) { DetailContent(movieDetails = testMovieDetails()) }
         }
 
-        composeTestRule.onNodeWithText("Action").assertIsDisplayed()
+        composeTestRule.onNodeWithText("ACTION").assertIsDisplayed()
     }
 
     @Test
     fun contentRendersOverviewSection() {
         composeTestRule.setContent {
-            AmroTheme { DetailContent(movieDetails = testMovieDetails()) }
+            AmroTheme(darkTheme = true) { DetailContent(movieDetails = testMovieDetails()) }
         }
 
-        composeTestRule.onNodeWithText("Overview").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Overview").assertIsDisplayed()
+        composeTestRule.onNodeWithText("OVERVIEW").assertIsDisplayed()
     }
 
     @Test
     fun imdbButtonShownWhenImdbIdPresent() {
         composeTestRule.setContent {
-            AmroTheme { DetailContent(movieDetails = testMovieDetails()) }
+            AmroTheme(darkTheme = true) { DetailContent(movieDetails = testMovieDetails()) }
         }
 
-        composeTestRule.onNodeWithText("View on IMDb").assertIsDisplayed()
+        composeTestRule.onNodeWithText("VIEW ON IMDB").assertIsDisplayed()
     }
 
     @Test
     fun imdbButtonHiddenWhenImdbIdNull() {
         composeTestRule.setContent {
-            AmroTheme {
+            AmroTheme(darkTheme = true) {
                 DetailContent(movieDetails = testMovieDetails().copy(imdbId = null))
             }
         }
 
-        composeTestRule.onNodeWithText("View on IMDb").assertDoesNotExist()
+        composeTestRule.onNodeWithText("VIEW ON IMDB").assertDoesNotExist()
     }
 
     @Test
     fun taglineHiddenWhenBlank() {
         composeTestRule.setContent {
-            AmroTheme {
+            AmroTheme(darkTheme = true) {
                 DetailContent(movieDetails = testMovieDetails().copy(tagline = ""))
             }
         }
 
-        composeTestRule.onNodeWithText("A tagline").assertDoesNotExist()
+        composeTestRule.onNodeWithText("A TAGLINE").assertDoesNotExist()
     }
 }

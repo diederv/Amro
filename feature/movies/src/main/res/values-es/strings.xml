@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Shared -->
+    <string name="action_retry">REINTENTAR</string>
+    <string name="error_signal_lost">SEÑAL PERDIDA</string>
+    <string name="status_unknown">—</string>
+
+    <!-- List screen -->
+    <string name="chip_for_you">PARA TI</string>
+    <string name="section_hot_picks">Selección Destacada</string>
+    <string name="empty_movies_message">Ninguna película coincide con tu filtro.\nPrueba otro género.</string>
+    <string name="content_description_search">Buscar</string>
+    <string name="content_description_settings">Ajustes</string>
+
+    <!-- Hero -->
+    <string name="hero_trending_now">EN TENDENCIA</string>
+    <string name="hero_genz_choice">★ ELECCIÓN GEN-Z</string>
+    <string name="action_watch_now">VER AHORA</string>
+    <string name="action_my_list">MI LISTA</string>
+
+    <!-- Sort -->
+    <string name="sort_label">ORDEN · %1$s</string>
+    <string name="sort_option_popularity">Popularidad</string>
+    <string name="sort_option_title">Título</string>
+    <string name="sort_option_release_date">Fecha de estreno</string>
+    <string name="content_description_sort_ascending">Ordenar ascendente</string>
+    <string name="content_description_sort_descending">Ordenar descendente</string>
+
+    <!-- Movie card accessibility -->
+    <string name="content_description_movie_card">%1$s, puntuación %2$s</string>
+    <string name="content_description_movie_card_with_genres">%1$s, %2$s, puntuación %3$s</string>
+
+    <!-- Detail screen -->
+    <string name="content_description_back">Atrás</string>
+    <string name="detail_overview">SINOPSIS</string>
+    <string name="detail_overview_unavailable">No hay sinopsis disponible.</string>
+    <string name="detail_stat_status">ESTADO</string>
+    <string name="detail_stat_runtime">DURACIÓN</string>
+    <string name="detail_stat_runtime_value">%1$d MIN</string>
+    <string name="detail_stat_release">ESTRENO</string>
+    <string name="detail_stat_budget">PRESUPUESTO</string>
+    <string name="detail_stat_revenue">RECAUDACIÓN</string>
+    <string name="detail_stat_votes">VOTOS</string>
+    <string name="detail_imdb_score">PUNTUACIÓN IMDB</string>
+    <string name="action_view_on_imdb">VER EN IMDB</string>
+    <string name="action_add_to_watchlist">AÑADIR A LA LISTA</string>
+</resources>

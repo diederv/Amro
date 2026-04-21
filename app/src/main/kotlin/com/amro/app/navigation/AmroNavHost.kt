@@ -7,6 +7,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.amro.app.settings.SettingsScreen
 import com.amro.feature.movies.ui.LocalAnimatedVisibilityScope
 import com.amro.feature.movies.ui.LocalSharedTransitionScope
 import com.amro.feature.movies.ui.detail.MovieDetailsScreen
@@ -23,7 +24,8 @@ fun AmroNavHost(navController: NavHostController) {
                         TrendingMoviesScreen(
                             onMovieClick = { movieId ->
                                 navController.navigate(MovieDetailsRoute(movieId))
-                            }
+                            },
+                            onSettingsClick = { navController.navigate(SettingsRoute) },
                         )
                     }
                 }
@@ -31,6 +33,9 @@ fun AmroNavHost(navController: NavHostController) {
                     CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {
                         MovieDetailsScreen(onBack = navController::navigateUp)
                     }
+                }
+                composable<SettingsRoute> {
+                    SettingsScreen(onBack = navController::navigateUp)
                 }
             }
         }

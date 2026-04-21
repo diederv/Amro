@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Shared -->
+    <string name="action_retry">OPNIEUW</string>
+    <string name="error_signal_lost">SIGNAAL VERLOREN</string>
+    <string name="status_unknown">—</string>
+
+    <!-- List screen -->
+    <string name="chip_for_you">VOOR JOU</string>
+    <string name="section_hot_picks">Toppers</string>
+    <string name="empty_movies_message">Geen films voldoen aan je filter.\nProbeer een ander genre.</string>
+    <string name="content_description_search">Zoeken</string>
+    <string name="content_description_settings">Instellingen</string>
+
+    <!-- Hero -->
+    <string name="hero_trending_now">NU TRENDING</string>
+    <string name="hero_genz_choice">★ GEN-Z KEUZE</string>
+    <string name="action_watch_now">BEKIJK NU</string>
+    <string name="action_my_list">MIJN LIJST</string>
+
+    <!-- Sort -->
+    <string name="sort_label">SORTEER · %1$s</string>
+    <string name="sort_option_popularity">Populariteit</string>
+    <string name="sort_option_title">Titel</string>
+    <string name="sort_option_release_date">Uitgave</string>
+    <string name="content_description_sort_ascending">Oplopend sorteren</string>
+    <string name="content_description_sort_descending">Aflopend sorteren</string>
+
+    <!-- Movie card accessibility -->
+    <string name="content_description_movie_card">%1$s, met %2$s sterren</string>
+    <string name="content_description_movie_card_with_genres">%1$s, %2$s, met %3$s sterren</string>
+
+    <!-- Detail screen -->
+    <string name="content_description_back">Terug</string>
+    <string name="detail_overview">OVERZICHT</string>
+    <string name="detail_overview_unavailable">Geen overzicht beschikbaar.</string>
+    <string name="detail_stat_status">STATUS</string>
+    <string name="detail_stat_runtime">DUUR</string>
+    <string name="detail_stat_runtime_value">%1$d MIN</string>
+    <string name="detail_stat_release">UITGAVE</string>
+    <string name="detail_stat_budget">BUDGET</string>
+    <string name="detail_stat_revenue">OMZET</string>
+    <string name="detail_stat_votes">STEMMEN</string>
+    <string name="detail_imdb_score">IMDB-SCORE</string>
+    <string name="action_view_on_imdb">BEKIJK OP IMDB</string>
+    <string name="action_add_to_watchlist">TOEVOEGEN AAN LIJST</string>
+</resources>

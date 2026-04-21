@@ -9,6 +9,13 @@ android {
     namespace = "com.amro.feature.movies"
 }
 
+tasks.withType<Test>().configureEach {
+    // Paparazzi and coroutine-test-based ViewModel tests both touch Dispatchers.Main.
+    // Running them in the same JVM fork leaks state via MainDispatcherLoader, so
+    // fork per test class to keep each class's dispatcher setup isolated.
+    forkEvery = 1
+}
+
 dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:network"))

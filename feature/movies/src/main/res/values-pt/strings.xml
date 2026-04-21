@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Shared -->
+    <string name="action_retry">TENTAR NOVAMENTE</string>
+    <string name="error_signal_lost">SEM SINAL</string>
+    <string name="status_unknown">—</string>
+
+    <!-- List screen -->
+    <string name="chip_for_you">PARA TI</string>
+    <string name="section_hot_picks">Em Destaque</string>
+    <string name="empty_movies_message">Nenhum filme corresponde ao teu filtro.\nExperimenta outro género.</string>
+    <string name="content_description_search">Pesquisar</string>
+    <string name="content_description_settings">Definições</string>
+
+    <!-- Hero -->
+    <string name="hero_trending_now">EM ALTA AGORA</string>
+    <string name="hero_genz_choice">★ ESCOLHA GEN-Z</string>
+    <string name="action_watch_now">VER AGORA</string>
+    <string name="action_my_list">MINHA LISTA</string>
+
+    <!-- Sort -->
+    <string name="sort_label">ORDEM · %1$s</string>
+    <string name="sort_option_popularity">Popularidade</string>
+    <string name="sort_option_title">Título</string>
+    <string name="sort_option_release_date">Lançamento</string>
+    <string name="content_description_sort_ascending">Ordenar crescente</string>
+    <string name="content_description_sort_descending">Ordenar decrescente</string>
+
+    <!-- Movie card accessibility -->
+    <string name="content_description_movie_card">%1$s, classificação %2$s</string>
+    <string name="content_description_movie_card_with_genres">%1$s, %2$s, classificação %3$s</string>
+
+    <!-- Detail screen -->
+    <string name="content_description_back">Voltar</string>
+    <string name="detail_overview">SINOPSE</string>
+    <string name="detail_overview_unavailable">Sem sinopse disponível.</string>
+    <string name="detail_stat_status">ESTADO</string>
+    <string name="detail_stat_runtime">DURAÇÃO</string>
+    <string name="detail_stat_runtime_value">%1$d MIN</string>
+    <string name="detail_stat_release">LANÇAMENTO</string>
+    <string name="detail_stat_budget">ORÇAMENTO</string>
+    <string name="detail_stat_revenue">RECEITA</string>
+    <string name="detail_stat_votes">VOTOS</string>
+    <string name="detail_imdb_score">NOTA IMDB</string>
+    <string name="action_view_on_imdb">VER NO IMDB</string>
+    <string name="action_add_to_watchlist">ADICIONAR À LISTA</string>
+</resources>

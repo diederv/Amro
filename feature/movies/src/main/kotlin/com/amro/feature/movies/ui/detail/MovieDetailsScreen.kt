@@ -3,6 +3,8 @@ package com.amro.feature.movies.ui.detail
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,35 +14,49 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.amro.core.designsystem.theme.AmroTheme
+import com.amro.core.designsystem.theme.glassSurface
+import com.amro.core.designsystem.theme.heroScrim
+import com.amro.core.designsystem.theme.primaryGradient
+import com.amro.core.model.Genre
 import com.amro.core.model.MovieDetails
+import com.amro.feature.movies.R
 import com.amro.feature.movies.ui.LocalAnimatedVisibilityScope
 import com.amro.feature.movies.ui.LocalSharedTransitionScope
 import com.amro.feature.movies.utils.backdropUrl
@@ -58,17 +74,28 @@ fun MovieDetailsScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
+                    scrolledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
+                    titleContentColor = MaterialTheme.colorScheme.primary,
+                ),
                 title = {
-                    val title = (uiState as? MovieDetailsUiState.Content)?.movieDetails?.title ?: ""
-                    Text(text = title, maxLines = 1)
+                    Text(
+                        text = "AMRO",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Black,
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.content_description_back),
+                            tint = MaterialTheme.colorScheme.primary,
                         )
                     }
                 },
@@ -82,7 +109,7 @@ fun MovieDetailsScreen(
                     .padding(paddingValues),
                 contentAlignment = Alignment.Center,
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
 
             is MovieDetailsUiState.Content -> DetailContent(
@@ -92,19 +119,13 @@ fun MovieDetailsScreen(
                     .padding(paddingValues),
             )
 
-            is MovieDetailsUiState.Error -> Column(
+            is MovieDetailsUiState.Error -> ErrorState(
+                message = state.message,
+                onRetry = viewModel::retry,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text("Something went wrong", style = MaterialTheme.typography.titleMedium)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(state.message, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = viewModel::retry) { Text("Retry") }
-            }
+            )
         }
     }
 }
@@ -134,99 +155,168 @@ internal fun DetailContent(
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
     ) {
-        AsyncImage(
-            model = backdropUrl(movieDetails.backdropPath) ?: posterUrl(movieDetails.posterPath),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = sharedHeroModifier
-                .fillMaxWidth()
-                .height(220.dp),
-        )
-
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = movieDetails.title,
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.semantics { heading() },
+        Box(modifier = Modifier.fillMaxWidth().height(320.dp)) {
+            AsyncImage(
+                model = backdropUrl(movieDetails.backdropPath) ?: posterUrl(movieDetails.posterPath),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = sharedHeroModifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(heroScrim()),
             )
 
-            if (movieDetails.tagline.isNotBlank()) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = movieDetails.tagline,
-                    style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-
-            if (movieDetails.genres.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(12.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    movieDetails.genres.forEach { genre ->
-                        SuggestionChip(onClick = {}, label = { Text(genre.name) })
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .fillMaxWidth()
+                    .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
+            ) {
+                if (movieDetails.genres.isNotEmpty()) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        movieDetails.genres.take(3).forEach { genre ->
+                            Text(
+                                text = genre.name.uppercase(),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.White,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(999.dp))
+                                    .glassSurface(shape = RoundedCornerShape(999.dp))
+                                    .padding(horizontal = 12.dp, vertical = 6.dp),
+                            )
+                        }
                     }
+                    Spacer(Modifier.height(12.dp))
+                }
+                Text(
+                    text = movieDetails.title.uppercase(),
+                    style = MaterialTheme.typography.displaySmall,
+                    color = Color.White,
+                    fontWeight = FontWeight.Black,
+                    modifier = Modifier.semantics { heading() },
+                )
+                if (movieDetails.tagline.isNotBlank()) {
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        text = movieDetails.tagline.uppercase(),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.secondary,
+                    )
                 }
             }
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Overview",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.semantics { heading() },
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = movieDetails.overview.ifBlank { "No overview available." },
-                style = MaterialTheme.typography.bodyMedium,
+        Spacer(Modifier.height(20.dp))
+
+        Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+            OverviewCard(
+                overview = movieDetails.overview.ifBlank { stringResource(R.string.detail_overview_unavailable) },
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = "Details",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.semantics { heading() },
-            )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(16.dp))
 
-            val stats = mutableListOf<Pair<String, String>>(
-                "Rating" to "%.1f / 10".format(movieDetails.voteAverage),
-                "Votes" to "%,d".format(movieDetails.voteCount),
-                "Release" to movieDetails.releaseDate.ifBlank { "—" },
-                "Runtime" to (movieDetails.runtime?.let { "$it min" } ?: "—"),
-                "Status" to movieDetails.status.ifBlank { "—" },
-            )
-            if (movieDetails.budget > 0) stats.add("Budget" to currencyFormat.format(movieDetails.budget))
-            if (movieDetails.revenue > 0) stats.add("Revenue" to currencyFormat.format(movieDetails.revenue))
+            val unknown = stringResource(R.string.status_unknown)
+            val statusLabel = stringResource(R.string.detail_stat_status)
+            val runtimeLabel = stringResource(R.string.detail_stat_runtime)
+            val runtimeValue = movieDetails.runtime?.let {
+                stringResource(R.string.detail_stat_runtime_value, it)
+            }
+            val releaseLabel = stringResource(R.string.detail_stat_release)
+            val budgetLabel = stringResource(R.string.detail_stat_budget)
+            val revenueLabel = stringResource(R.string.detail_stat_revenue)
+            val votesLabel = stringResource(R.string.detail_stat_votes)
+            val stats = buildList {
+                add(statusLabel to movieDetails.status.ifBlank { unknown }.uppercase())
+                if (runtimeValue != null) add(runtimeLabel to runtimeValue)
+                add(releaseLabel to movieDetails.releaseDate.take(4).ifBlank { unknown })
+                if (movieDetails.budget > 0) add(budgetLabel to currencyFormat.format(movieDetails.budget))
+                if (movieDetails.revenue > 0) add(revenueLabel to currencyFormat.format(movieDetails.revenue))
+                add(votesLabel to "%,d".format(movieDetails.voteCount))
+            }
+            StatsStrip(stats = stats)
 
-            StatsGrid(stats = stats)
+            Spacer(Modifier.height(16.dp))
+
+            RatingCard(rating = movieDetails.voteAverage)
+
+            Spacer(Modifier.height(20.dp))
 
             if (movieDetails.imdbId != null) {
-                Spacer(modifier = Modifier.height(24.dp))
-                Button(
+                GradientCta(
+                    label = stringResource(R.string.action_view_on_imdb),
+                    leadingIcon = Icons.Default.PlayArrow,
                     onClick = {
                         context.startActivity(
                             Intent(
                                 Intent.ACTION_VIEW,
                                 Uri.parse("https://www.imdb.com/title/${movieDetails.imdbId}"),
-                            )
+                            ),
                         )
                     },
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text("View on IMDb")
-                }
+                )
+                Spacer(Modifier.height(12.dp))
             }
+            GlassCta(
+                label = stringResource(R.string.action_add_to_watchlist),
+                leadingIcon = Icons.Default.Add,
+                onClick = {},
+            )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(32.dp))
         }
     }
 }
 
 @Composable
-private fun StatsGrid(stats: List<Pair<String, String>>) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        stats.chunked(2).forEach { row ->
-            Row {
+private fun OverviewCard(overview: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(20.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                Modifier
+                    .width(3.dp)
+                    .height(16.dp)
+                    .background(MaterialTheme.colorScheme.tertiary),
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = stringResource(R.string.detail_overview),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Black,
+                modifier = Modifier.semantics { heading() },
+            )
+        }
+        Spacer(Modifier.height(12.dp))
+        Text(
+            text = overview,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@Composable
+private fun StatsStrip(stats: List<Pair<String, String>>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        stats.chunked(3).forEach { row ->
+            Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                 row.forEach { (label, value) ->
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
@@ -234,14 +324,200 @@ private fun StatsGrid(stats: List<Pair<String, String>>) {
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
+                        Spacer(Modifier.height(4.dp))
                         Text(
                             text = value,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                 }
-                if (row.size == 1) Spacer(modifier = Modifier.weight(1f))
+                repeat(3 - row.size) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun RatingCard(rating: Double) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(20.dp),
+    ) {
+        Icon(
+            imageVector = Icons.Default.Star,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.size(28.dp),
+        )
+        Spacer(Modifier.width(14.dp))
+        Column {
+            Text(
+                text = "%.1f".format(rating),
+                style = MaterialTheme.typography.displaySmall,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Black,
+            )
+            Text(
+                text = stringResource(R.string.detail_imdb_score),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+private fun GradientCta(
+    label: String,
+    leadingIcon: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: () -> Unit,
+) {
+    val shape = RoundedCornerShape(999.dp)
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(primaryGradient(), shape)
+            .clickable(onClick = onClick)
+            .padding(vertical = 16.dp),
+    ) {
+        Icon(
+            imageVector = leadingIcon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.size(18.dp),
+        )
+        Spacer(Modifier.width(10.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontWeight = FontWeight.Black,
+        )
+    }
+}
+
+@Composable
+private fun GlassCta(
+    label: String,
+    leadingIcon: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: () -> Unit,
+) {
+    val shape = RoundedCornerShape(999.dp)
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .glassSurface(shape = shape)
+            .clickable(onClick = onClick)
+            .padding(vertical = 16.dp),
+    ) {
+        Icon(
+            imageVector = leadingIcon,
+            contentDescription = null,
+            tint = Color.White,
+            modifier = Modifier.size(18.dp),
+        )
+        Spacer(Modifier.width(10.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = Color.White,
+            fontWeight = FontWeight.Black,
+        )
+    }
+}
+
+@Composable
+private fun ErrorState(
+    message: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.background(MaterialTheme.colorScheme.background),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = stringResource(R.string.error_signal_lost),
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.tertiary,
+            fontWeight = FontWeight.Black,
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 32.dp),
+        )
+        Spacer(Modifier.height(20.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .clip(RoundedCornerShape(999.dp))
+                .background(primaryGradient(), RoundedCornerShape(999.dp))
+                .clickable(onClick = onRetry)
+                .padding(horizontal = 28.dp, vertical = 14.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.action_retry),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontWeight = FontWeight.Black,
+            )
+        }
+    }
+}
+
+@Preview(name = "DetailContent", widthDp = 412, heightDp = 900)
+@Composable
+private fun DetailContentPreview() {
+    AmroTheme(darkTheme = true) {
+        DetailContent(
+            movieDetails = MovieDetails(
+                id = 1,
+                title = "Interstellar",
+                overview = "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
+                tagline = "Mankind was born on Earth. It was never meant to die here.",
+                posterPath = null,
+                backdropPath = null,
+                voteAverage = 8.6,
+                voteCount = 34_000,
+                releaseDate = "2014-11-07",
+                runtime = 169,
+                status = "Released",
+                budget = 165_000_000L,
+                revenue = 701_700_000L,
+                genres = listOf(Genre(878, "Sci-Fi"), Genre(18, "Drama"), Genre(12, "Adventure")),
+                imdbId = "tt0816692",
+                popularity = 200.0,
+            ),
+        )
+    }
+}
+
+@Preview(name = "DetailError", widthDp = 412, heightDp = 600)
+@Composable
+private fun DetailErrorPreview() {
+    AmroTheme(darkTheme = true) {
+        ErrorState(
+            message = "Failed to load movie details.",
+            onRetry = {},
+        )
     }
 }

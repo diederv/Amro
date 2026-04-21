@@ -3,7 +3,7 @@
 An Android MVP showcasing a scalable, modular architecture for browsing trending
 movies via TMDB. Built as a take-home assessment.
 
-![CI](https://github.com/diederick-amro/amro/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/diederv/Amro/actions/workflows/ci.yml/badge.svg)
 
 ## Quick start
 
