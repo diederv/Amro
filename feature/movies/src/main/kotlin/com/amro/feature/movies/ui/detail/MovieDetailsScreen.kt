@@ -125,7 +125,7 @@ fun MovieDetailsScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.content_description_back),
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = Color.Black,
                         )
                     }
                 },

@@ -39,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
@@ -62,13 +63,13 @@ fun SettingsScreen(onBack: () -> Unit) {
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
                     scrolledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
-                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = Color.Black,
                 ),
                 title = {
                     Text(
                         text = stringResource(R.string.settings_title).uppercase(),
                         style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = Color.Black,
                         fontWeight = FontWeight.Black,
                     )
                 },
@@ -77,7 +78,7 @@ fun SettingsScreen(onBack: () -> Unit) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(com.amro.feature.movies.R.string.content_description_back),
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = Color.Black,
                         )
                     }
                 },
