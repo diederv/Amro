@@ -1,5 +1,7 @@
 package com.amro.feature.movies.ui.list
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,8 +28,11 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.amro.core.model.Genre
 import com.amro.core.model.Movie
+import com.amro.feature.movies.ui.LocalAnimatedVisibilityScope
+import com.amro.feature.movies.ui.LocalSharedTransitionScope
 import com.amro.feature.movies.utils.posterUrl
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun MovieListItem(
     movie: Movie,
@@ -42,6 +47,18 @@ fun MovieListItem(
         append(", rated %.1f".format(movie.voteAverage))
     }
 
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+    val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
+
+    val sharedImageModifier = if (sharedTransitionScope != null && animatedVisibilityScope != null) {
+        with(sharedTransitionScope) {
+            Modifier.sharedElement(
+                state = rememberSharedContentState(key = "movie-image-${movie.id}"),
+                animatedVisibilityScope = animatedVisibilityScope,
+            )
+        }
+    } else Modifier
+
     Card(
         onClick = onClick,
         modifier = modifier
@@ -53,7 +70,7 @@ fun MovieListItem(
                 model = posterUrl(movie.posterPath),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
+                modifier = sharedImageModifier
                     .width(80.dp)
                     .fillMaxHeight(),
             )
@@ -90,7 +107,7 @@ fun MovieListItem(
                     }
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                Row(horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     genreNames.take(2).forEach { name ->
                         SuggestionChip(
                             onClick = {},

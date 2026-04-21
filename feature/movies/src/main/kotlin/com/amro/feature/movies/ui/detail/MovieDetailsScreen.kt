@@ -2,6 +2,7 @@ package com.amro.feature.movies.ui.detail
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.amro.core.model.MovieDetails
+import com.amro.feature.movies.ui.LocalAnimatedVisibilityScope
+import com.amro.feature.movies.ui.LocalSharedTransitionScope
 import com.amro.feature.movies.utils.backdropUrl
 import com.amro.feature.movies.utils.posterUrl
 import org.koin.compose.viewmodel.koinViewModel
@@ -106,6 +109,7 @@ fun MovieDetailsScreen(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun DetailContent(
     movieDetails: MovieDetails,
@@ -116,6 +120,17 @@ internal fun DetailContent(
         maximumFractionDigits = 0
     }
 
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+    val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
+    val sharedHeroModifier = if (sharedTransitionScope != null && animatedVisibilityScope != null) {
+        with(sharedTransitionScope) {
+            Modifier.sharedElement(
+                state = rememberSharedContentState(key = "movie-image-${movieDetails.id}"),
+                animatedVisibilityScope = animatedVisibilityScope,
+            )
+        }
+    } else Modifier
+
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
     ) {
@@ -123,7 +138,7 @@ internal fun DetailContent(
             model = backdropUrl(movieDetails.backdropPath) ?: posterUrl(movieDetails.posterPath),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier
+            modifier = sharedHeroModifier
                 .fillMaxWidth()
                 .height(220.dp),
         )
