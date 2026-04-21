@@ -51,6 +51,7 @@ fun SortControls(
                 onValueChange = {},
                 readOnly = true,
                 singleLine = true,
+                label = { Text("Sort by") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
                     .menuAnchor(MenuAnchorType.PrimaryNotEditable)
