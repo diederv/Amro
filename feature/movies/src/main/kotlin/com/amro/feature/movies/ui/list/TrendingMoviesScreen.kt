@@ -3,6 +3,7 @@ package com.amro.feature.movies.ui.list
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,11 +27,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,6 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
 import com.amro.core.designsystem.theme.AmroTheme
 import com.amro.core.designsystem.theme.glassSurface
 import com.amro.core.designsystem.theme.primaryGradient
@@ -119,14 +127,32 @@ private fun LucidTopBar(onSettingsClick: () -> Unit) {
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         title = {
-            Image(
-                painter = painterResource(R.drawable.logo_amro),
-                contentDescription = "AMRO",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .height(64.dp)
-                    .semantics { heading() },
-            )
+            val tooltipState = rememberTooltipState(isPersistent = false)
+            val scope = rememberCoroutineScope()
+            TooltipBox(
+                positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+                tooltip = {
+                    PlainTooltip {
+                        Text(stringResource(R.string.brand_full_name))
+                    }
+                },
+                state = tooltipState,
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.logo_amro),
+                    contentDescription = "AMRO",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .height(64.dp)
+                        .semantics { heading() }
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                        ) {
+                            scope.launch { tooltipState.show() }
+                        },
+                )
+            }
         },
         actions = {
             IconButton(onClick = onSettingsClick) {

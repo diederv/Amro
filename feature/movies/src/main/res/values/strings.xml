@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Shared -->
+    <string name="brand_full_name">Advanced Movie Recommendation Organisation</string>
     <string name="action_retry">RETRY</string>
     <string name="error_signal_lost">SIGNAL LOST</string>
     <string name="status_unknown">—</string>
