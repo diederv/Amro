@@ -4,7 +4,7 @@ An Android MVP showcasing a scalable, modular architecture for browsing trending
 movies via TMDB. Built as a take-home assessment.
 
 
-<img width="560" height="150" src="https://raw.githubusercontent.com/diederv/Amro/refs/heads/main/feature/movies/src/main/res/drawable-nodpi/logo_amro.png?token=GHSAT0AAAAAAD3AETWPBGOBF43KDKYS3G5E2PI7PCQ" />
+<img width="560" height="150" src="/feature/movies/src/main/res/drawable-nodpi/logo_amro.png" />
 
 ## Quick start
 
