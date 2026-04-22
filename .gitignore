@@ -12,6 +12,9 @@ build/
 local.properties
 .kotlin/
 
+# Claude Code
+.claude/
+
 # Build outputs
 *.apk
 *.aab
