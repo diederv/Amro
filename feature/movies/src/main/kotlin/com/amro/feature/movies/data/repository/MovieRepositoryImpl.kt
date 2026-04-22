@@ -25,7 +25,7 @@ class MovieRepositoryImpl(
     override fun observeGenres(): Flow<List<Genre>> =
         localDataSource.observeGenres().map { entities -> entities.map { it.toDomain() } }
 
-    // Called by ViewModel on launch and on pull-to-refresh.
+    // Called by ViewModel on launch, on pull-to-refresh, and on error-state retry.
     override suspend fun refreshTrendingMovies(): Result<Unit> = runCatching {
         val movies = remoteDataSource.getTrendingMovies()
         localDataSource.upsertMovies(movies.map { it.toEntity() })

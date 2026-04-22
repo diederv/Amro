@@ -10,6 +10,7 @@
     <string name="chip_for_you">FOR YOU</string>
     <string name="section_hot_picks">Hot Picks</string>
     <string name="empty_movies_message">No movies match your filter.\nTry a different genre.</string>
+    <string name="action_clear_filter">CLEAR FILTER</string>
     <string name="content_description_search">Search</string>
     <string name="content_description_settings">Settings</string>
 

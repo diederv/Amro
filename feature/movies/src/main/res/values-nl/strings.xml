@@ -9,6 +9,7 @@
     <string name="chip_for_you">VOOR JOU</string>
     <string name="section_hot_picks">Toppers</string>
     <string name="empty_movies_message">Geen films voldoen aan je filter.\nProbeer een ander genre.</string>
+    <string name="action_clear_filter">FILTER WISSEN</string>
     <string name="content_description_search">Zoeken</string>
     <string name="content_description_settings">Instellingen</string>
 

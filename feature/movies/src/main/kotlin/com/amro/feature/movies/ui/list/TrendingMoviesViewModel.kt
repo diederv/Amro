@@ -25,13 +25,15 @@ class TrendingMoviesViewModel(
 
     private val filterParams = MutableStateFlow(FilterAndSortParams())
     private val refreshError = MutableStateFlow<Throwable?>(null)
+    private val isRefreshing = MutableStateFlow(false)
 
     val uiState = combine(
         getTrendingMovies(),
         observeGenres(),
         filterParams,
         refreshError,
-    ) { movies, genres, params, error ->
+        isRefreshing,
+    ) { movies, genres, params, error, refreshing ->
         when {
             movies.isEmpty() && error != null ->
                 TrendingMoviesUiState.Error(error.message ?: "Failed to load movies")
@@ -48,6 +50,7 @@ class TrendingMoviesViewModel(
                     selectedGenreId = params.genreId,
                     sortOption = params.sortOption,
                     sortOrder = params.sortOrder,
+                    isRefreshing = refreshing,
                 )
             }
         }
@@ -64,8 +67,13 @@ class TrendingMoviesViewModel(
     fun refresh() {
         viewModelScope.launch {
             refreshError.value = null
-            val result = repository.refreshTrendingMovies()
-            if (result is Result.Error) refreshError.value = result.exception
+            isRefreshing.value = true
+            try {
+                val result = repository.refreshTrendingMovies()
+                if (result is Result.Error) refreshError.value = result.exception
+            } finally {
+                isRefreshing.value = false
+            }
         }
     }
 

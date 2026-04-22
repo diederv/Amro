@@ -2,4 +2,5 @@
 <resources>
     <string name="settings_title">Ajustes</string>
     <string name="settings_language_section">Idioma</string>
+    <string name="settings_content_description_back">Atrás</string>
 </resources>

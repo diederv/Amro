@@ -1,4 +1,4 @@
-package com.amro.app.settings
+package com.amro.feature.settings
 
 import android.app.Activity
 import android.content.Context

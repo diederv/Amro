@@ -109,7 +109,8 @@ fun MovieDetailsScreen(
                             contentDescription = "AMRO",
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
-                                .height(64.dp)
+                                .padding(vertical = 8.dp)
+                                .height(38.dp)
                                 .semantics { heading() }
                                 .clickable(
                                     interactionSource = remember { MutableInteractionSource() },
@@ -125,7 +126,7 @@ fun MovieDetailsScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.content_description_back),
-                            tint = Color.Black,
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 },

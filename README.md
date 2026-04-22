@@ -15,10 +15,11 @@ movies via TMDB. Built as a take-home assessment.
 
 - **Trending Movies** — top 100 trending this week, filter by genre, sort by popularity/title/release date (asc/desc)
 - **Movie Details** — full info including budget, revenue, vote count, IMDb link
-- Offline-first: works without network after first fetch
+- Offline-first: works without network after first fetch (with 'Pull to Refresh')
 - Light + dark themes with Material 3 dynamic color on Android 12+
 - Shared element transition between list poster and detail hero image
 - Accessibility: TalkBack-friendly, 48dp touch targets, semantic headings, merged list item semantics
+- Settings: Select your native- or favorite language
 
 ## Architecture
 
@@ -31,6 +32,7 @@ Multi-module, offline-first, Clean-lite:
 :core:database          Room database, DAOs, TypeConverters
 :core:model             Pure Kotlin domain models + sealed Result<T>
 :feature:movies         List + detail screens, ViewModels, use cases, repository
+:feature:settings       Settings screen, language helper class
 ```
 
 Data flow: `TMDB API → Repository → Room (single source of truth) → Flow → ViewModel → UiState → Composable`
@@ -42,7 +44,7 @@ Data flow: `TMDB API → Repository → Room (single source of truth) → Flow �
 - **Clean-lite architecture** — data/domain/UI separation with use cases where they earn their keep (e.g. `FilterAndSortMoviesUseCase`), not every action wrapped for its own sake.
 - **Sealed Result + UiState** — errors as values in the data/domain layer, UI maps to a sealed `UiState` with explicit Loading/Content/Empty/Error variants.
 - **Kotlinx.serialization** — modern, Kotlin-native, no annotation processor, builds faster than Moshi+KAPT.
-- **6-module shape** — addresses AMRO's "multiple feature teams" ambition without over-engineering a 2-screen MVP. A future `:feature:actors` team can reuse `:core:designsystem` and the repository pattern without touching movies code.
+- **7-module shape** — addresses AMRO's "multiple feature teams" ambition without over-engineering a 2-screen MVP. A future `:feature:actors` team can reuse `:core:designsystem` and the repository pattern without touching movies code.
 
 ## Testing strategy
 
@@ -71,3 +73,22 @@ Run: `./gradlew test` (unit + screenshot) or `./gradlew connectedAndroidTest` (C
 ## Tech stack
 
 Kotlin 2.0, Jetpack Compose, Material 3, Coroutines + Flow, Koin 4, Retrofit 2, Kotlinx.serialization, Room, Coil, Navigation Compose 2.8 (type-safe routes), Turbine, Paparazzi, GitHub Actions.
+
+## Decisions
+
+| Area | Decision                                                         | Rationale (use this in defense) |
+|---|------------------------------------------------------------------|---|
+| **Modularization** | 7 modules (3-4 meaningful + shell)                               | Demonstrates the pattern, addresses "feature teams" hint, not over-engineered |
+| **DI** | Koin                                                             | Listed as nice-to-have on the job posting; simpler for MVP size |
+| **Architecture** | Clean-lite (data + domain + UI)                                  | Use cases only where they earn their keep; avoids ceremony-for-ceremony |
+| **Data strategy** | Offline-first with Room                                          | Addresses "offline" hint in brief; Room is single source of truth |
+| **Network** | Retrofit + Kotlinx.serialization                                 | Modern, Kotlin-native, no annotation processor |
+| **Images** | Coil                                                             | Compose-first, Kotlin-native, de facto standard |
+| **Navigation** | Compose Navigation with type-safe routes                         | Modern Navigation 2.8+ with `@Serializable` route objects |
+| **Error handling** | Sealed `Result<T>` in domain + sealed `UiState` in UI            | Errors as values, never cross layer boundaries as exceptions |
+| **API key** | `local.properties` + BuildConfig + GitHub Actions secret         | Standard and secure; keeps key out of public repo |
+| **Tests** | Pyramid + screenshot tests                                       | Unit (JUnit4 + MockK + Turbine), Compose UI (createComposeRule), Paparazzi screenshots in light+dark |
+| **Commits** | Small focused commits, Conventional Commits style                | ~15-25 commits telling the build story |
+| **Bonuses** | Dark mode, accessibility, shared-element transition, CI pipeline | All four picked |
+
+---

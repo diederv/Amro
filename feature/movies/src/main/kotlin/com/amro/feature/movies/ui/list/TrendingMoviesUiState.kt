@@ -14,6 +14,7 @@ sealed class TrendingMoviesUiState {
         val selectedGenreId: Int?,
         val sortOption: SortOption,
         val sortOrder: SortOrder,
+        val isRefreshing: Boolean = false,
     ) : TrendingMoviesUiState()
     data object Empty : TrendingMoviesUiState()
     data class Error(val message: String) : TrendingMoviesUiState()

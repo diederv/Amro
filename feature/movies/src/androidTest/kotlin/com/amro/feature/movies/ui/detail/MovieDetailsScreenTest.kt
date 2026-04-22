@@ -1,21 +1,25 @@
 package com.amro.feature.movies.ui.detail
 
-import androidx.compose.ui.test.assertDoesNotExist
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.amro.core.designsystem.theme.AmroTheme
+import com.amro.feature.movies.ForceLocaleRule
 import com.amro.feature.movies.util.testMovieDetails
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.Locale
 
 @RunWith(AndroidJUnit4::class)
 class MovieDetailsScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
+
+    @get:Rule
+    val localRule = ForceLocaleRule(Locale.ENGLISH)
 
     @Test
     fun contentRendersTitle() {

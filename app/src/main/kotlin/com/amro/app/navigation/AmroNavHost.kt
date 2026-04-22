@@ -7,11 +7,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.amro.app.settings.SettingsScreen
 import com.amro.feature.movies.ui.LocalAnimatedVisibilityScope
 import com.amro.feature.movies.ui.LocalSharedTransitionScope
 import com.amro.feature.movies.ui.detail.MovieDetailsScreen
 import com.amro.feature.movies.ui.list.TrendingMoviesScreen
+import com.amro.feature.settings.SettingsScreen
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable

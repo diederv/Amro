@@ -7,6 +7,10 @@ plugins {
 
 android {
     namespace = "com.amro.feature.movies"
+
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 tasks.withType<Test>().configureEach {

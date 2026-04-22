@@ -10,7 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.amro.app.navigation.AmroNavHost
-import com.amro.app.settings.LocaleManager
+import com.amro.feature.settings.LocaleManager
 import com.amro.core.designsystem.theme.AmroTheme
 
 class MainActivity : ComponentActivity() {

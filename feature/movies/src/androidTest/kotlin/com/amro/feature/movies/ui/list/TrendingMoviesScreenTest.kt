@@ -1,9 +1,14 @@
 package com.amro.feature.movies.ui.list
 
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.amro.core.designsystem.theme.AmroTheme
 import com.amro.core.model.Genre
@@ -51,10 +56,22 @@ class TrendingMoviesScreenTest {
             }
         }
 
-        // Hero renders the featured movie title in uppercase; grid items likewise.
+        // Hero renders the featured title as plain text and is visible at the top.
         composeTestRule.onNodeWithText("INCEPTION").assertIsDisplayed()
-        composeTestRule.onNodeWithText("THE MASK").assertIsDisplayed()
-        composeTestRule.onNodeWithText("TENET").assertIsDisplayed()
+
+        // Grid tiles sit below the 440dp hero and use clearAndSetSemantics with a
+        // contentDescription, so we scroll the vertical grid and query by label.
+        val verticalScroller = SemanticsMatcher.keyIsDefined(
+            SemanticsProperties.VerticalScrollAxisRange,
+        )
+        composeTestRule.onNode(verticalScroller)
+            .performScrollToNode(hasContentDescription("The Mask", substring = true))
+        composeTestRule.onNodeWithContentDescription("The Mask", substring = true)
+            .assertIsDisplayed()
+        composeTestRule.onNode(verticalScroller)
+            .performScrollToNode(hasContentDescription("Tenet", substring = true))
+        composeTestRule.onNodeWithContentDescription("Tenet", substring = true)
+            .assertIsDisplayed()
     }
 
     @Test

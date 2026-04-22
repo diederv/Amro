@@ -1,4 +1,4 @@
-package com.amro.app.settings
+package com.amro.feature.settings
 
 import android.app.Activity
 import android.content.Context
@@ -47,7 +47,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.amro.app.R
 import com.amro.core.designsystem.theme.AmroTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,7 +68,7 @@ fun SettingsScreen(onBack: () -> Unit) {
                     Text(
                         text = stringResource(R.string.settings_title).uppercase(),
                         style = MaterialTheme.typography.titleLarge,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Black,
                     )
                 },
@@ -77,8 +76,8 @@ fun SettingsScreen(onBack: () -> Unit) {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(com.amro.feature.movies.R.string.content_description_back),
-                            tint = Color.Black,
+                            contentDescription = stringResource(R.string.settings_content_description_back),
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 },

@@ -33,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -96,12 +97,14 @@ fun TrendingMoviesScreen(
                 onGenreFilter = viewModel::setGenreFilter,
                 onSortOption = viewModel::setSortOption,
                 onSortOrder = viewModel::setSortOrder,
+                onRefresh = viewModel::refresh,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
             )
 
             TrendingMoviesUiState.Empty -> EmptyContent(
+                onClearFilter = { viewModel.setGenreFilter(null) },
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
@@ -144,7 +147,8 @@ private fun LucidTopBar(onSettingsClick: () -> Unit) {
                     contentDescription = "AMRO",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
-                        .height(64.dp)
+                        .padding(vertical = 8.dp)
+                        .height(38.dp)
                         .semantics { heading() }
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
@@ -160,13 +164,14 @@ private fun LucidTopBar(onSettingsClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = stringResource(R.string.content_description_settings),
-                    tint = Color.Black,
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         },
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MovieListContent(
     state: TrendingMoviesUiState.Content,
@@ -175,59 +180,66 @@ internal fun MovieListContent(
     onSortOption: (com.amro.feature.movies.domain.model.SortOption) -> Unit,
     onSortOrder: (com.amro.feature.movies.domain.model.SortOrder) -> Unit,
     modifier: Modifier = Modifier,
+    onRefresh: () -> Unit = {},
 ) {
     val featured = state.movies.firstOrNull()
     val gridItems = if (featured != null) state.movies.drop(1) else state.movies
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
+    PullToRefreshBox(
+        isRefreshing = state.isRefreshing,
+        onRefresh = onRefresh,
         modifier = modifier.background(MaterialTheme.colorScheme.background),
-        contentPadding = PaddingValues(bottom = 32.dp),
-        horizontalArrangement = Arrangement.spacedBy(GridGutter),
-        verticalArrangement = Arrangement.spacedBy(GridGutter),
     ) {
-        if (featured != null) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 32.dp),
+            horizontalArrangement = Arrangement.spacedBy(GridGutter),
+            verticalArrangement = Arrangement.spacedBy(GridGutter),
+        ) {
+            if (featured != null) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    FeaturedHero(movie = featured, onPlayClick = onMovieClick)
+                }
+            }
             item(span = { GridItemSpan(maxLineSpan) }) {
-                FeaturedHero(movie = featured, onPlayClick = onMovieClick)
+                GenreFilterRow(
+                    genres = state.allGenres,
+                    selectedGenreId = state.selectedGenreId,
+                    onGenreSelected = onGenreFilter,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                )
             }
-        }
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            GenreFilterRow(
-                genres = state.allGenres,
-                selectedGenreId = state.selectedGenreId,
-                onGenreSelected = onGenreFilter,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-            )
-        }
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            SortControls(
-                sortOption = state.sortOption,
-                sortOrder = state.sortOrder,
-                onSortOption = onSortOption,
-                onSortOrder = onSortOrder,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            Column {
-                Spacer(Modifier.height(4.dp))
-                SectionHeader(title = stringResource(R.string.section_hot_picks))
-                Spacer(Modifier.height(12.dp))
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                SortControls(
+                    sortOption = state.sortOption,
+                    sortOrder = state.sortOrder,
+                    onSortOption = onSortOption,
+                    onSortOrder = onSortOrder,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
-        }
-        itemsIndexed(gridItems, key = { _, m -> m.id }) { index, movie ->
-            val isStartColumn = index % 2 == 0
-            MovieListItem(
-                movie = movie,
-                genres = state.allGenres,
-                onClick = { onMovieClick(movie.id) },
-                modifier = Modifier.padding(
-                    start = if (isStartColumn) GridEdgePadding else 0.dp,
-                    end = if (isStartColumn) 0.dp else GridEdgePadding,
-                ),
-            )
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Column {
+                    Spacer(Modifier.height(4.dp))
+                    SectionHeader(title = stringResource(R.string.section_hot_picks))
+                    Spacer(Modifier.height(12.dp))
+                }
+            }
+            itemsIndexed(gridItems, key = { _, m -> m.id }) { index, movie ->
+                val isStartColumn = index % 2 == 0
+                MovieListItem(
+                    movie = movie,
+                    genres = state.allGenres,
+                    onClick = { onMovieClick(movie.id) },
+                    modifier = Modifier.padding(
+                        start = if (isStartColumn) GridEdgePadding else 0.dp,
+                        end = if (isStartColumn) 0.dp else GridEdgePadding,
+                    ),
+                )
+            }
         }
     }
 }
@@ -243,17 +255,38 @@ internal fun LoadingContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-internal fun EmptyContent(modifier: Modifier = Modifier) {
-    Box(
+internal fun EmptyContent(
+    modifier: Modifier = Modifier,
+    onClearFilter: () -> Unit = {},
+) {
+    Column(
         modifier = modifier.background(MaterialTheme.colorScheme.background),
-        contentAlignment = Alignment.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
     ) {
         Text(
             text = stringResource(R.string.empty_movies_message),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 32.dp),
         )
+        Spacer(modifier = Modifier.height(20.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .clip(RoundedCornerShape(999.dp))
+                .background(primaryGradient(), RoundedCornerShape(999.dp))
+                .clickable(onClick = onClearFilter)
+                .padding(horizontal = 28.dp, vertical = 14.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.action_clear_filter),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontWeight = FontWeight.Black,
+            )
+        }
     }
 }
 

@@ -9,6 +9,7 @@
     <string name="chip_for_you">FÜR DICH</string>
     <string name="section_hot_picks">Highlights</string>
     <string name="empty_movies_message">Keine Filme entsprechen deinem Filter.\nVersuche ein anderes Genre.</string>
+    <string name="action_clear_filter">FILTER ENTFERNEN</string>
     <string name="content_description_search">Suchen</string>
     <string name="content_description_settings">Einstellungen</string>
 

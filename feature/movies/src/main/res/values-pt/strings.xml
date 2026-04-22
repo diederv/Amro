@@ -9,6 +9,7 @@
     <string name="chip_for_you">PARA TI</string>
     <string name="section_hot_picks">Em Destaque</string>
     <string name="empty_movies_message">Nenhum filme corresponde ao teu filtro.\nExperimenta outro género.</string>
+    <string name="action_clear_filter">LIMPAR FILTRO</string>
     <string name="content_description_search">Pesquisar</string>
     <string name="content_description_settings">Definições</string>
 
