@@ -3,7 +3,8 @@
 An Android MVP showcasing a scalable, modular architecture for browsing trending
 movies via TMDB. Built as a take-home assessment.
 
-![CI](https://github.com/diederv/Amro/actions/workflows/ci.yml/badge.svg)
+
+<img width="560" height="150" src="https://raw.githubusercontent.com/diederv/Amro/refs/heads/main/feature/movies/src/main/res/drawable-nodpi/logo_amro.png?token=GHSAT0AAAAAAD3AETWPBGOBF43KDKYS3G5E2PI7PCQ" />
 
 ## Quick start
 
@@ -74,7 +75,7 @@ Run: `./gradlew test` (unit + screenshot) or `./gradlew connectedAndroidTest` (C
 
 Kotlin 2.0, Jetpack Compose, Material 3, Coroutines + Flow, Koin 4, Retrofit 2, Kotlinx.serialization, Room, Coil, Navigation Compose 2.8 (type-safe routes), Turbine, Paparazzi, GitHub Actions.
 
-## Decisions
+## Decision log
 
 | Area | Decision                                                         | Rationale (use this in defense) |
 |---|------------------------------------------------------------------|---|
